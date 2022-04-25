@@ -58,6 +58,7 @@ add_library(turbulence
    tkeeq.F90
    turbulence.F90
    variances.F90
+   surfacewave_turbulence.F90
 )
 target_link_libraries(turbulence PRIVATE util yaml)
 target_include_directories(turbulence PUBLIC $<BUILD_INTERFACE:$<TARGET_PROPERTY:turbulence,Fortran_MODULE_DIRECTORY>> $<INSTALL_INTERFACE:include>)

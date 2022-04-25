@@ -80,4 +80,5 @@
 #define KPP_IP_FC
 #undef KPP_CLIP_GS
 #define KPP_SALINITY
+#define _HARCOURT_QINGLI_
 

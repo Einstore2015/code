@@ -49,6 +49,8 @@
    use turbulence,   only: q2over2_bc, k_ubc, k_lbc, ubc_type, lbc_type
    use turbulence,   only: sq
    use util,         only: Dirichlet,Neumann
+   use observations, only: wave_turbulence
+   use turbulence,   only: diss_w
 
    IMPLICIT NONE
 !
@@ -97,13 +99,21 @@
 
    tkeo=tke
 
+   if (wave_turbulence) then
+      CALL waveinduced_turbulence(nlev)
+   end if
+
    do i=1,nlev-1
 
 !     compute diffusivity
       avh(i) = sq*sqrt( 2.*tke(i) )*L(i)
 
 !     compute production terms in q^2/2-equation
-      prod     = P(i)
+      if (wave_turbulence) then
+         prod = P(i) + diss_w(i)
+      else
+         prod     = P(i)
+      end if
       buoyan   = B(i)
       diss     = eps(i)
 

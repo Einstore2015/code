@@ -60,7 +60,7 @@
 
 !  shear and buoyancy production
 !  of tke and buoyancy variance
-   REALTYPE, public, dimension(:), allocatable   :: P,B,Pb
+   REALTYPE, public, dimension(:), allocatable   :: P,B,Pb,diss_w
 
 !  turbulent diffusivities
 !  of momentum, temperature, salinity
@@ -853,6 +853,10 @@
    allocate(Pb(0:nlev),stat=rc)
    if (rc /= 0) stop 'init_turbulence: Error allocating (Pb)'
    Pb = _ZERO_
+
+   allocate(diss_w(0:nlev),stat=rc)
+   if (rc /= 0) stop 'init_turbulence: Error allocating (diss_w)'
+   diss_w = _ZERO_
 
    allocate(num(0:nlev),stat=rc)
    if (rc /= 0) stop 'init_turbulence: Error allocating (num)'
@@ -3756,7 +3760,7 @@
    LEVEL2 'tke,eps,L',tke,eps,L
    LEVEL2 'tkeo',tkeo
    LEVEL2 'kb,epsb',kb,epsb
-   LEVEL2 'P,B,Pb',P,B,Pb
+   LEVEL2 'P,B,Pb',P,B,Pb,diss_w
    LEVEL2 'num,nuh,nus',num,nuh,nus
    LEVEL2 'gamu,gamv',gamu,gamv
    LEVEL2 'gamb,gamh,gams',gamb,gamh,gams

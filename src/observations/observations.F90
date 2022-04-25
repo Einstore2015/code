@@ -145,6 +145,9 @@
    type (type_scalar_input), public :: Hs_
    type (type_scalar_input), public :: Tz_
    type (type_scalar_input), public :: phiw_
+   type (type_scalar_input), public :: WTp_
+   REALTYPE, public                 :: beta
+   logical,  public                 :: wave_turbulence
 
 !  Observed velocity profile profiles - typically from ADCP
    integer                   :: vel_prof_method
@@ -412,7 +415,8 @@
    Hs=_ZERO_
    Tz=_ZERO_
    phiw=_ZERO_
-
+   beta=_ONE_
+   wave_turbulence=.false.
 !  Observed velocity profile profiles - typically from ADCP
    vel_prof_method=0
    vel_prof_file='velprof.dat'
@@ -716,6 +720,12 @@
                    minimum=0._rk,default=0._rk)
    call twig%get(phiw_, 'phiw', 'mean direction', '-', &
                    minimum=0._rk,maximum=360._rk,default=0._rk)
+   call twig%get(WTp_, 'WTp','Peak Wave Period','s', &
+                   minimum=0._rk,default=0._rk)
+   leaf => twig%get_typed_child('wave_turbulence','non-breaking wave induced mixing')
+   call leaf%get(wave_turbulence,'use','using wave turbulence',default=.false.)
+   call leaf%get(beta,'beta','dimensionless constant', '-', &
+                   default=1._rk)
 
    branch => settings_store%get_typed_child('turbulence')
 
@@ -908,6 +918,7 @@
    call register_input(Hs_)
    call register_input(Tz_)
    call register_input(phiw_)
+   call register_input(WTp_)
 
 !  The observed velocity profile
    call register_input(uprof)

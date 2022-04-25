@@ -74,6 +74,8 @@
    use turbulence, only: q2l_bc, psi_ubc, psi_lbc, ubc_type, lbc_type
    use turbulence, only: sl
    use util,       only: Dirichlet,Neumann
+   use turbulence, only: diss_w
+   use observations,only:wave_turbulence
 
    IMPLICIT NONE
 !
@@ -168,9 +170,13 @@
 #endif
 
 !     compute production terms in q^2 l - equation
-      prod        =  e1*L(i)*P(i)
+      if ( wave_turbulence ) then
+         prod     = e1*L(i)*(P(i) + diss_w(i))
+      else
+         prod     =  e1*L(i)*P(i)
+      end if
       buoyan      =  e3*L(i)*B(i)
-      diss        =  q3(i)/b1*(1.+e2*(L(i)/Lz(i))*(L(i)/Lz(i)))
+      diss        =  e2*q3(i)/b1*(1.+e2*(L(i)/Lz(i))*(L(i)/Lz(i)))
 
 !     compute positive and negative parts of RHS
       if (prod+buoyan .gt. 0) then
